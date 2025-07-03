@@ -20,7 +20,7 @@
             @apply bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-cyan-500/20 transition-all duration-300 transform hover:-translate-y-1 flex flex-col;
         }
         .tag {
-            @apply bg-gray-700 text-cyan-300 text-xs font-semibold mr-2 mb-2 px-2.5 py-1 rounded-full;
+            @apply bg-gray-700 text-cyan-300 text-xs font-semibold mr-2 mb-2 px-3 py-1.5 rounded-full;
         }
 
         /* --- Animation Styles --- */
@@ -268,15 +268,27 @@
         <!-- Education Section -->
         <section id="education" class="py-20 animated-section">
             <h2 class="section-title">Education</h2>
-            <div class="max-w-3xl mx-auto card">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <h3 class="text-xl font-bold text-white">Indian Institute Of Technology (IIT), Bhilai</h3>
-                        <p class="text-cyan-400 font-semibold">B.Tech in Data Science & Artificial Intelligence</p>
+            <div class="max-w-3xl mx-auto space-y-8">
+                <div class="card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Indian Institute Of Technology (IIT), Bhilai</h3>
+                            <p class="text-cyan-400 font-semibold">B.Tech in Data Science & Artificial Intelligence</p>
+                        </div>
+                        <p class="text-gray-400 text-right">July 2020 - May 2024</p>
                     </div>
-                    <p class="text-gray-400">July 2020 - May 2024</p>
+                    <p class="mt-4 text-gray-300">CGPA: 7.74 / 10.0</p>
                 </div>
-                <p class="mt-4 text-gray-300">CGPA: 7.74 / 10.0</p>
+                 <div class="card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Tirumala Junior College</h3>
+                            <p class="text-cyan-400 font-semibold">Intermediate (MPC)</p>
+                        </div>
+                        <p class="text-gray-400 text-right">July 2018 - May 2020</p>
+                    </div>
+                    <p class="mt-4 text-gray-300">CGPA: 9.48 / 10.0</p>
+                </div>
             </div>
         </section>
 
@@ -310,6 +322,7 @@
             <h2 class="section-title">Personal Projects</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="card">
+                    <img src="https://placehold.co/600x400/111827/E5E7EB?text=MultiModal+AI" alt="MultiModal AI Chat Project" class="rounded-md mb-4" onerror="this.onerror=null;this.src='https://placehold.co/600x400/111827/E5E7EB?text=Image+Not+Found';">
                     <div class="flex-grow">
                         <h3 class="text-xl font-bold text-white">MultiModal AI Chat</h3>
                         <p class="mt-2 text-gray-300 project-description">Integrated Whisper, LLaVA, and ChromaDB for seamless conversations with text, audio, images, and PDFs.</p>
@@ -320,6 +333,7 @@
                     <button class="gemini-feature-btn explain-project-btn" data-project-title="MultiModal AI Chat" data-project-desc="Integrated Whisper, LLaVA, and ChromaDB for seamless conversations with text, audio, images, and PDFs.">✨ Explain Simply</button>
                 </div>
                 <div class="card">
+                    <img src="https://placehold.co/600x400/111827/E5E7EB?text=Diabetes+Risk" alt="Diabetes Risk+ Project" class="rounded-md mb-4" onerror="this.onerror=null;this.src='https://placehold.co/600x400/111827/E5E7EB?text=Image+Not+Found';">
                     <div class="flex-grow">
                         <h3 class="text-xl font-bold text-white">Diabetes Risk+</h3>
                         <p class="mt-2 text-gray-300 project-description">A prediction model using advanced sampling (SMOTE) to handle imbalanced datasets. Achieved 0.85 precision and 0.88 recall.</p>
@@ -330,6 +344,7 @@
                     <button class="gemini-feature-btn explain-project-btn" data-project-title="Diabetes Risk+" data-project-desc="A prediction model using advanced sampling (SMOTE) to handle imbalanced datasets. Achieved 0.85 precision and 0.88 recall.">✨ Explain Simply</button>
                 </div>
                 <div class="card">
+                    <img src="https://placehold.co/600x400/111827/E5E7EB?text=Potato+Disease" alt="Potato Disease Prediction Project" class="rounded-md mb-4" onerror="this.onerror=null;this.src='https://placehold.co/600x400/111827/E5E7EB?text=Image+Not+Found';">
                     <div class="flex-grow">
                         <h3 class="text-xl font-bold text-white">Advanced Potato Disease Prediction</h3>
                         <p class="mt-2 text-gray-300 project-description">An image classification model with 88% accuracy to help farmers identify crop diseases, deployed on AWS EC2.</p>
@@ -344,30 +359,38 @@
 
         <!-- Skills Section -->
         <section id="skills" class="py-20 animated-section">
-            <h2 class="section-title">Skills</h2>
-            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="max-w-5xl mx-auto space-y-8">
                 <div class="card">
-                    <h3 class="text-lg font-semibold text-white mb-3">Programming & AI</h3>
-                    <div class="flex flex-wrap">
+                    <h3 class="text-lg font-semibold text-white mb-4">Languages</h3>
+                    <div class="flex flex-wrap gap-2">
                         <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">C++</span>
-                        <span class="tag">Data Science</span><span class="tag">Machine Learning</span><span class="tag">LLMs</span>
-                        <span class="tag">RAG</span><span class="tag">NLP</span>
                     </div>
                 </div>
                 <div class="card">
-                    <h3 class="text-lg font-semibold text-white mb-3">Web Development & Tools</h3>
-                    <div class="flex flex-wrap">
-                        <span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">Django</span>
-                        <span class="tag">Flask</span><span class="tag">MongoDB</span><span class="tag">Git</span>
-                        <span class="tag">VSCode</span><span class="tag">Heroku</span>
+                    <h3 class="text-lg font-semibold text-white mb-4">AI & Data Science</h3>
+                    <p class="text-gray-400 mb-4">Building intelligent models and systems from data.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tag">Machine Learning</span><span class="tag">Data Science</span><span class="tag">Data Analytics</span>
+                        <span class="tag">Natural Language Processing (NLP)</span><span class="tag">Large Language Models (LLMs)</span>
+                        <span class="tag">Retrieval-Augmented Generation (RAG)</span>
                     </div>
                 </div>
-                <div class="card md:col-span-2">
-                    <h3 class="text-lg font-semibold text-white mb-3">Python Libraries</h3>
-                    <div class="flex flex-wrap">
+                 <div class="card">
+                    <h3 class="text-lg font-semibold text-white mb-4">Python Libraries</h3>
+                    <p class="text-gray-400 mb-4">The toolkit for data manipulation, analysis, and model building.</p>
+                    <div class="flex flex-wrap gap-2">
                         <span class="tag">Pandas</span><span class="tag">Numpy</span><span class="tag">Matplotlib</span>
-                        <span class="tag">Scikit-Learn</span><span class="tag">Transformers</span><span class="tag">LangChain</span>
-                        <span class="tag">OpenCV</span><span class="tag">TensorFlow</span><span class="tag">NLTK</span>
+                        <span class="tag">Scikit-Learn</span><span class="tag">TensorFlow</span><span class="tag">Transformers</span><span class="tag">LangChain</span>
+                        <span class="tag">OpenCV</span><span class="tag">NLTK</span><span class="tag">Spacy</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="text-lg font-semibold text-white mb-4">Web Development & Deployment</h3>
+                     <p class="text-gray-400 mb-4">Bringing models to life with web applications and APIs.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tag">Flask</span><span class="tag">Django</span><span class="tag">HTML</span><span class="tag">CSS</span>
+                        <span class="tag">MongoDB</span><span class="tag">Heroku</span><span class="tag">Git</span><span class="tag">VSCode</span>
                     </div>
                 </div>
             </div>
@@ -397,9 +420,14 @@
             <div class="container mx-auto px-6 text-center">
                 <h2 class="text-3xl font-bold text-white mb-4">Get In Touch</h2>
                 <p class="text-gray-400 mb-6">Feel free to reach out for collaborations or just a friendly chat!</p>
-                <a href="mailto:venugopal1902@gmail.com" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold px-6 py-3 rounded-lg transition inline-block">
-                    venugopal1902@gmail.com
-                </a>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+                     <a href="mailto:venugopal1902@gmail.com" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold px-6 py-3 rounded-lg transition inline-flex items-center gap-2">
+                        <i class="fas fa-envelope"></i> venugopal1902@gmail.com
+                    </a>
+                    <a href="tel:+917799470468" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold px-6 py-3 rounded-lg transition inline-flex items-center gap-2">
+                         <i class="fas fa-phone"></i> +91 7799470468
+                    </a>
+                </div>
                 <div class="mt-8">
                     <button id="draft-message-btn" class="gemini-feature-btn max-w-sm mx-auto">✨ Draft a Connection Message</button>
                 </div>
@@ -447,14 +475,18 @@
         const resumeContext = `
             VENU GOPAL GUBBALA
             - Email: venugopal1902@gmail.com
+            - Phone: +91 7799470468
             - LinkedIn: linkedin.com/in/venu-gopal-gubbala-79773a21b/
             - GitHub: github.com/venugopal1902
             - LeetCode: leetcode.com/u/venugopal1902/
 
             EDUCATION
-            - Indian Institute Of Technology (IIT), Bhilai
-            - B.Tech in Data Science & Artificial Intelligence (July 2020 - May 2024)
-            - CGPA: 7.74/10
+            1. Indian Institute Of Technology (IIT), Bhilai
+               - B.Tech in Data Science & Artificial Intelligence (July 2020 - May 2024)
+               - CGPA: 7.74/10
+            2. Tirumala Junior College
+               - Intermediate (MPC) (July 2018 - May 2020)
+               - CGPA: 9.48/10
 
             WORK EXPERIENCE
             1. Artificial Intelligence Developer at TCS (Aug 2024 - present)
@@ -474,10 +506,9 @@
 
             SKILLS
             - Programming: Python, SQL, C++
-            - AI Stack: Data Science, Machine Learning, LLMs, RAG, NLP
-            - Web Dev: HTML, CSS, Django, Flask, MongoDB
-            - Tools: Git, VSCode, Linux, Heroku
-            - Python Libraries: Pandas, Numpy, Matplotlib, Scikit-Learn, Transformers, LangChain, OpenCV, TensorFlow, NLTK
+            - AI & Data Science: Machine Learning, Data Science, Data Analytics, Natural Language Processing (NLP), Large Language Models (LLMs), Retrieval-Augmented Generation (RAG)
+            - Python Libraries: Pandas, Numpy, Matplotlib, Scikit-Learn, TensorFlow, Transformers, LangChain, OpenCV, NLTK, Spacy
+            - Web Dev & Deployment: Flask, Django, HTML, CSS, MongoDB, Heroku, Git, VSCode
 
             ACHIEVEMENTS
             - Completed 600+ challenges on LeetCode and CodeChef.
@@ -565,7 +596,7 @@
         
         // --- Generic Gemini API Call Function ---
         async function getGeminiResponse(prompt) {
-            const apiKey = "AIzaSyA8UOgTyrd3sIpg2BbR_-hu2LVG71bmZAM"; // API key will be injected by the environment
+            const apiKey = "AIzaSyA8UOgTyrd3sIpg2BbR_-hu2LVG71bmZAM"; // IMPORTANT: Add your Gemini API key here for deployment
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ role: "user", parts: [{ text: prompt }] }],
