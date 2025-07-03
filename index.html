@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venu Gopal Gubbala - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark blue-gray background */
+            color: #E5E7EB; /* Light gray text */
+        }
+        .section-title {
+            @apply text-3xl font-bold text-cyan-400 mb-8 text-center;
+        }
+        .card {
+            @apply bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-cyan-500/20 transition-all duration-300 transform hover:-translate-y-1 flex flex-col;
+        }
+        .tag {
+            @apply bg-gray-700 text-cyan-300 text-xs font-semibold mr-2 mb-2 px-2.5 py-1 rounded-full;
+        }
+
+        /* --- Animation Styles --- */
+        .animated-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .animated-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card {
+             opacity: 0;
+             transform: scale(0.95);
+             transition: opacity 0.5s ease-out, transform 0.5s ease-out, box-shadow 0.3s, transform 0.3s;
+        }
+        .card.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* --- Chatbot Styles --- */
+        #chat-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+        #chat-bubble {
+            width: 60px;
+            height: 60px;
+            background-color: #0891B2; /* Cyan */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease-in-out, opacity 0.3s;
+        }
+        #chat-bubble:hover {
+            transform: scale(1.1);
+        }
+        #chat-widget {
+            display: none;
+            width: 350px;
+            height: 500px;
+            background-color: #1F2937; /* Darker gray */
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .chat-header {
+            background-color: #0E7490; /* Darker Cyan */
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 1px solid #374151;
+            position: relative;
+        }
+        #chat-close-btn {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .chat-body {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .chat-message {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            max-width: 85%;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #0891B2;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+        .bot-message {
+            background-color: #374151; /* Gray */
+            color: #E5E7EB;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+        .loading-indicator {
+            align-self: flex-start;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: #6B7280;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+        .chat-input {
+            display: flex;
+            padding: 0.75rem;
+            border-top: 1px solid #374151;
+        }
+        .chat-input input {
+            flex-grow: 1;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            background-color: #4B5563;
+            color: white;
+        }
+        .chat-input input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #0891B2;
+        }
+        .chat-input button {
+            background: none;
+            border: none;
+            color: #0891B2;
+            margin-left: 0.5rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: color 0.2s;
+        }
+        .chat-input button:disabled {
+            color: #6B7280;
+            cursor: not-allowed;
+        }
+
+        /* --- Feature Modal Styles --- */
+        #feature-modal {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        #feature-modal-content {
+            background-color: #1F2937;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        #feature-modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #9CA3AF;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        #feature-modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0891B2;
+            margin-bottom: 1rem;
+        }
+        #feature-modal-body {
+            color: #E5E7EB;
+            line-height: 1.6;
+            min-height: 100px;
+        }
+        .gemini-feature-btn {
+            @apply bg-cyan-600/50 text-cyan-300 text-sm font-semibold px-4 py-2 rounded-lg mt-4 w-full hover:bg-cyan-600/80 transition-colors duration-200;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-gray-900/70 backdrop-blur-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-white">Venu G.</a>
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="#about" class="text-gray-300 hover:text-cyan-400 transition">About</a>
+                <a href="#experience" class="text-gray-300 hover:text-cyan-400 transition">Experience</a>
+                <a href="#projects" class="text-gray-300 hover:text-cyan-400 transition">Projects</a>
+                <a href="#skills" class="text-gray-300 hover:text-cyan-400 transition">Skills</a>
+                <a href="#contact" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold px-4 py-2 rounded-lg transition">Contact</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-white focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#about" class="block py-2 px-4 text-sm hover:bg-gray-700">About</a>
+            <a href="#experience" class="block py-2 px-4 text-sm hover:bg-gray-700">Experience</a>
+            <a href="#projects" class="block py-2 px-4 text-sm hover:bg-gray-700">Projects</a>
+            <a href="#skills" class="block py-2 px-4 text-sm hover:bg-gray-700">Skills</a>
+            <a href="#contact" class="block py-2 px-4 text-sm hover:bg-gray-700">Contact</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <!-- Hero/About Section -->
+        <section id="about" class="min-h-screen flex items-center justify-center text-center animated-section">
+            <div>
+                <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
+                    Hi, I'm <span class="text-cyan-400">Venu Gopal Gubbala</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                    A B.Tech graduate in Data Science & AI from IIT Bhilai, passionate about building intelligent systems using Machine Learning, LLMs, and RAGs.
+                </p>
+                <div class="flex justify-center space-x-6 text-3xl">
+                    <a href="https://www.linkedin.com/in/venu-gopal-gubbala-79773a21b/" target="_blank" class="text-gray-400 hover:text-cyan-400 transition"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/venugopal1902" target="_blank" class="text-gray-400 hover:text-cyan-400 transition"><i class="fab fa-github"></i></a>
+                    <a href="https://leetcode.com/u/venugopal1902/" target="_blank" class="text-gray-400 hover:text-cyan-400 transition"><i class="fa-solid fa-code"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="py-20 animated-section">
+            <h2 class="section-title">Education</h2>
+            <div class="max-w-3xl mx-auto card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Indian Institute Of Technology (IIT), Bhilai</h3>
+                        <p class="text-cyan-400 font-semibold">B.Tech in Data Science & Artificial Intelligence</p>
+                    </div>
+                    <p class="text-gray-400">July 2020 - May 2024</p>
+                </div>
+                <p class="mt-4 text-gray-300">CGPA: 7.74 / 10.0</p>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="py-20 animated-section">
+            <h2 class="section-title">Work Experience</h2>
+            <div class="space-y-8 max-w-4xl mx-auto">
+                <div class="card">
+                    <h3 class="text-xl font-bold text-white">Artificial Intelligence Developer</h3>
+                    <p class="text-cyan-400 font-semibold">TCS | Aug 2024 - Present</p>
+                    <ul class="mt-4 list-disc list-inside text-gray-300 space-y-2">
+                        <li>Created a text-to-SQL model using RAG and LLMs, improving accuracy by 25%.</li>
+                        <li>Designed a Keras OCR model to detect UI form structures with 90% accuracy, reducing manual work by 60%.</li>
+                        <li>Boosted data retrieval accuracy by 40% and query processing efficiency by 30% through optimized language models.</li>
+                        <li>Deployed a machine learning model as a REST API using Django and PostgreSQL, improving data storage efficiency by 40%.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-bold text-white">Data Science Intern</h3>
+                    <p class="text-cyan-400 font-semibold">CDAC Pune</p>
+                    <ul class="mt-4 list-disc list-inside text-gray-300 space-y-2">
+                        <li>Designed an image segmentation algorithm to detect inhabitation areas, achieving an IOU score of 79%.</li>
+                        <li>Applied DBSCAN clustering to pinpoint inhabitation zones with a silhouette score of 0.69.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-20 animated-section">
+            <h2 class="section-title">Personal Projects</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card">
+                    <div class="flex-grow">
+                        <h3 class="text-xl font-bold text-white">MultiModal AI Chat</h3>
+                        <p class="mt-2 text-gray-300 project-description">Integrated Whisper, LLaVA, and ChromaDB for seamless conversations with text, audio, images, and PDFs.</p>
+                        <div class="mt-4 flex flex-wrap">
+                            <span class="tag">Mistral LLM</span><span class="tag">Whisper AI</span><span class="tag">Chroma DB</span><span class="tag">LangChain</span>
+                        </div>
+                    </div>
+                    <button class="gemini-feature-btn explain-project-btn" data-project-title="MultiModal AI Chat" data-project-desc="Integrated Whisper, LLaVA, and ChromaDB for seamless conversations with text, audio, images, and PDFs.">✨ Explain Simply</button>
+                </div>
+                <div class="card">
+                    <div class="flex-grow">
+                        <h3 class="text-xl font-bold text-white">Diabetes Risk+</h3>
+                        <p class="mt-2 text-gray-300 project-description">A prediction model using advanced sampling (SMOTE) to handle imbalanced datasets. Achieved 0.85 precision and 0.88 recall.</p>
+                         <div class="mt-4 flex flex-wrap">
+                            <span class="tag">Scikit-Learn</span><span class="tag">Flask</span><span class="tag">Heroku</span><span class="tag">SMOTE</span>
+                        </div>
+                    </div>
+                    <button class="gemini-feature-btn explain-project-btn" data-project-title="Diabetes Risk+" data-project-desc="A prediction model using advanced sampling (SMOTE) to handle imbalanced datasets. Achieved 0.85 precision and 0.88 recall.">✨ Explain Simply</button>
+                </div>
+                <div class="card">
+                    <div class="flex-grow">
+                        <h3 class="text-xl font-bold text-white">Advanced Potato Disease Prediction</h3>
+                        <p class="mt-2 text-gray-300 project-description">An image classification model with 88% accuracy to help farmers identify crop diseases, deployed on AWS EC2.</p>
+                         <div class="mt-4 flex flex-wrap">
+                            <span class="tag">TensorFlow</span><span class="tag">Flask</span><span class="tag">AWS EC2</span><span class="tag">CNN</span>
+                        </div>
+                    </div>
+                    <button class="gemini-feature-btn explain-project-btn" data-project-title="Advanced Potato Disease Prediction" data-project-desc="An image classification model with 88% accuracy to help farmers identify crop diseases, deployed on AWS EC2.">✨ Explain Simply</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-20 animated-section">
+            <h2 class="section-title">Skills</h2>
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+                <div class="card">
+                    <h3 class="text-lg font-semibold text-white mb-3">Programming & AI</h3>
+                    <div class="flex flex-wrap">
+                        <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">C++</span>
+                        <span class="tag">Data Science</span><span class="tag">Machine Learning</span><span class="tag">LLMs</span>
+                        <span class="tag">RAG</span><span class="tag">NLP</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="text-lg font-semibold text-white mb-3">Web Development & Tools</h3>
+                    <div class="flex flex-wrap">
+                        <span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">Django</span>
+                        <span class="tag">Flask</span><span class="tag">MongoDB</span><span class="tag">Git</span>
+                        <span class="tag">VSCode</span><span class="tag">Heroku</span>
+                    </div>
+                </div>
+                <div class="card md:col-span-2">
+                    <h3 class="text-lg font-semibold text-white mb-3">Python Libraries</h3>
+                    <div class="flex flex-wrap">
+                        <span class="tag">Pandas</span><span class="tag">Numpy</span><span class="tag">Matplotlib</span>
+                        <span class="tag">Scikit-Learn</span><span class="tag">Transformers</span><span class="tag">LangChain</span>
+                        <span class="tag">OpenCV</span><span class="tag">TensorFlow</span><span class="tag">NLTK</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Achievements Section -->
+        <section id="achievements" class="py-20 animated-section">
+            <h2 class="section-title">Achievements</h2>
+            <div class="max-w-3xl mx-auto space-y-4">
+                <div class="card flex items-center space-x-4">
+                    <i class="fas fa-trophy text-2xl text-yellow-400"></i>
+                    <p class="text-gray-300">Completed 600+ challenges on LeetCode and CodeChef.</p>
+                </div>
+                <div class="card flex items-center space-x-4">
+                    <i class="fas fa-award text-2xl text-yellow-400"></i>
+                    <p class="text-gray-300">Scored in the 98th percentile in the JEE Mains Exam.</p>
+                </div>
+                <div class="card flex items-center space-x-4">
+                    <i class="fas fa-medal text-2xl text-yellow-400"></i>
+                    <p class="text-gray-300">Secured a rank of 2300 in the JEE Advanced Exam.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <footer id="contact" class="bg-gray-900 py-12 animated-section">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl font-bold text-white mb-4">Get In Touch</h2>
+                <p class="text-gray-400 mb-6">Feel free to reach out for collaborations or just a friendly chat!</p>
+                <a href="mailto:venugopal1902@gmail.com" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold px-6 py-3 rounded-lg transition inline-block">
+                    venugopal1902@gmail.com
+                </a>
+                <div class="mt-8">
+                    <button id="draft-message-btn" class="gemini-feature-btn max-w-sm mx-auto">✨ Draft a Connection Message</button>
+                </div>
+                <div class="mt-8 text-gray-500">
+                    <p>&copy; 2024 Venu Gopal Gubbala. All Rights Reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Chatbot -->
+    <div id="chat-container">
+        <div id="chat-widget">
+            <div class="chat-header">
+                Chat with Venu's AI Assistant
+                <button id="chat-close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chat-body" id="chat-body">
+                <!-- Messages will be appended here -->
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chat-input-field" placeholder="Ask about Venu..." autocomplete="off">
+                <button id="chat-send-btn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <div id="chat-bubble">
+            <i class="far fa-comments text-white text-2xl"></i>
+        </div>
+    </div>
+
+    <!-- Gemini Feature Modal -->
+    <div id="feature-modal">
+        <div id="feature-modal-content">
+            <button id="feature-modal-close-btn"><i class="fas fa-times"></i></button>
+            <h3 id="feature-modal-title"></h3>
+            <div id="feature-modal-body">
+                <!-- Gemini response will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Resume data for Gemini context ---
+        const resumeContext = `
+            VENU GOPAL GUBBALA
+            - Email: venugopal1902@gmail.com
+            - LinkedIn: linkedin.com/in/venu-gopal-gubbala-79773a21b/
+            - GitHub: github.com/venugopal1902
+            - LeetCode: leetcode.com/u/venugopal1902/
+
+            EDUCATION
+            - Indian Institute Of Technology (IIT), Bhilai
+            - B.Tech in Data Science & Artificial Intelligence (July 2020 - May 2024)
+            - CGPA: 7.74/10
+
+            WORK EXPERIENCE
+            1. Artificial Intelligence Developer at TCS (Aug 2024 - present)
+               - Created a text-to-SQL model using RAG and LLMs, improving accuracy by 25%.
+               - Designed a Keras OCR model for UI form structure detection (90% accuracy), reducing manual work by 60%.
+               - Boosted data retrieval accuracy by 40% and query processing efficiency by 30%.
+               - Deployed a ML model as a REST API using Django and PostgreSQL.
+
+            2. Data Science Intern at CDAC Pune
+               - Designed an image segmentation algorithm for inhabitation area detection (IOU score of 79%).
+               - Applied DBSCAN clustering to pinpoint inhabitation zones (silhouette score of 0.69).
+
+            PERSONAL PROJECTS
+            1. MultiModal AI Chat: Integrated Mistral LLM, Whisper AI, LLaVA, and Chroma DB for conversations with text, audio, images, and PDFs. Used quantized models for efficiency.
+            2. Diabetes Risk+: A prediction model using SMOTE to handle imbalanced datasets. Achieved 0.85 precision and 0.88 recall. Built with Scikit-Learn, Flask, and deployed on Heroku.
+            3. Advanced Potato Disease Prediction: An image classification model (88% accuracy) using TensorFlow and Flask, deployed on AWS EC2.
+
+            SKILLS
+            - Programming: Python, SQL, C++
+            - AI Stack: Data Science, Machine Learning, LLMs, RAG, NLP
+            - Web Dev: HTML, CSS, Django, Flask, MongoDB
+            - Tools: Git, VSCode, Linux, Heroku
+            - Python Libraries: Pandas, Numpy, Matplotlib, Scikit-Learn, Transformers, LangChain, OpenCV, TensorFlow, NLTK
+
+            ACHIEVEMENTS
+            - Completed 600+ challenges on LeetCode and CodeChef.
+            - 98th percentile in JEE Mains Exam.
+            - Rank 2300 in JEE Advanced Exam.
+        `;
+
+        // --- UI & Animation Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Animation on Scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animated-section, .card').forEach(section => {
+                observer.observe(section);
+            });
+        });
+
+        // --- Chatbot functionality ---
+        const chatBubble = document.getElementById('chat-bubble');
+        const chatWidget = document.getElementById('chat-widget');
+        const chatBody = document.getElementById('chat-body');
+        const inputField = document.getElementById('chat-input-field');
+        const sendBtn = document.getElementById('chat-send-btn');
+        const chatCloseBtn = document.getElementById('chat-close-btn');
+
+        let chatHistory = [];
+
+        function toggleChatWidget(show) {
+            if (show) {
+                chatWidget.style.display = 'flex';
+                chatBubble.style.display = 'none';
+            } else {
+                chatWidget.style.display = 'none';
+                chatBubble.style.display = 'flex';
+            }
+        }
+
+        chatBubble.addEventListener('click', () => {
+            toggleChatWidget(true);
+            if (chatBody.children.length === 0) {
+                setTimeout(() => {
+                    appendMessage("Hello! I'm Venu's AI assistant. Feel free to ask me anything about his resume.", 'bot');
+                }, 300);
+            }
+        });
+
+        chatCloseBtn.addEventListener('click', () => toggleChatWidget(false));
+
+        function appendMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message', `${sender}-message`);
+            messageDiv.textContent = text;
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function showLoadingIndicator(container) {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('loading-indicator');
+            loadingDiv.id = 'loading';
+            loadingDiv.innerHTML = `<div class="dot"></div><div class="dot"></div><div class="dot"></div>`;
+            container.appendChild(loadingDiv);
+            if(container === chatBody) container.scrollTop = container.scrollHeight;
+        }
+
+        function hideLoadingIndicator() {
+            const loadingDiv = document.getElementById('loading');
+            if (loadingDiv) {
+                loadingDiv.remove();
+            }
+        }
+        
+        // --- Generic Gemini API Call Function ---
+        async function getGeminiResponse(prompt) {
+            const apiKey = "AIzaSyA8UOgTyrd3sIpg2BbR_-hu2LVG71bmZAM"; // API key will be injected by the environment
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ role: "user", parts: [{ text: prompt }] }],
+            };
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`API error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+                return result.candidates[0].content.parts[0].text;
+            }
+            return "Sorry, I couldn't process that. Please try again.";
+        }
+
+
+        // --- Chatbot Specific Logic ---
+        async function getBotResponseFromGemini(userInput) {
+            showLoadingIndicator(chatBody);
+            sendBtn.disabled = true;
+            
+            const prompt = `You are a helpful and friendly AI assistant for Venu Gopal Gubbala's portfolio website. Your knowledge is strictly limited to the following information about him. Do not answer any questions outside of this context. If asked about something not in the resume, politely state that you only have information from Venu's resume. Be conversational and answer the user's query based on the provided text.\n\n---RESUME CONTEXT---\n${resumeContext}\n\n---END OF CONTEXT---\n\nUser query: "${userInput}"`;
+
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+            try {
+                const botResponse = await getGeminiResponse(prompt);
+                chatHistory.push({ role: "model", parts: [{ text: botResponse }] });
+                hideLoadingIndicator();
+                appendMessage(botResponse, 'bot');
+            } catch (error) {
+                console.error("Gemini API call failed:", error);
+                hideLoadingIndicator();
+                appendMessage("Sorry, I'm having trouble connecting. Please try again later.", 'bot');
+            } finally {
+                sendBtn.disabled = false;
+                inputField.focus();
+            }
+        }
+
+        async function handleUserInput() {
+            const userInput = inputField.value.trim();
+            if (userInput === "") return;
+
+            appendMessage(userInput, 'user');
+            inputField.value = "";
+            
+            await getBotResponseFromGemini(userInput);
+        }
+
+        sendBtn.addEventListener('click', handleUserInput);
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleUserInput();
+            }
+        });
+
+        // --- New Gemini Features Logic ---
+        const modal = document.getElementById('feature-modal');
+        const modalTitle = document.getElementById('feature-modal-title');
+        const modalBody = document.getElementById('feature-modal-body');
+        const modalCloseBtn = document.getElementById('feature-modal-close-btn');
+
+        function showModal(title, bodyContent) {
+            modalTitle.textContent = title;
+            modalBody.innerHTML = ''; // Clear previous content
+            if(typeof bodyContent === 'string') {
+                modalBody.textContent = bodyContent;
+            } else {
+                modalBody.appendChild(bodyContent);
+            }
+            modal.style.display = 'flex';
+        }
+
+        modalCloseBtn.addEventListener('click', () => modal.style.display = 'none');
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) {
+                 modal.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.explain-project-btn').forEach(button => {
+            button.addEventListener('click', async () => {
+                const title = button.dataset.projectTitle;
+                const desc = button.dataset.projectDesc;
+                const prompt = `Explain the following project in simple, easy-to-understand terms for a non-technical audience. Keep it concise (about 2-3 sentences).\n\nProject Title: "${title}"\nProject Description: "${desc}"`;
+                
+                showModal(`Explaining: ${title}`, '');
+                showLoadingIndicator(modalBody);
+
+                try {
+                    const explanation = await getGeminiResponse(prompt);
+                    hideLoadingIndicator();
+                    modalBody.textContent = explanation;
+                } catch (error) {
+                    hideLoadingIndicator();
+                    modalBody.textContent = "Could not generate explanation. Please try again.";
+                    console.error("Project explanation error:", error);
+                }
+            });
+        });
+
+        document.getElementById('draft-message-btn').addEventListener('click', async () => {
+            const prompt = `You are an AI assistant helping a recruiter or potential collaborator draft a professional and friendly connection message to Venu Gopal Gubbala, an AI Developer. Use his resume context to make it relevant. The message should be concise, express interest in his skills and projects, and be suitable for a LinkedIn message. Keep it under 100 words. Start with "Hi Venu,".`;
+
+            showModal('Drafting Connection Message', '');
+            showLoadingIndicator(modalBody);
+
+            try {
+                const message = await getGeminiResponse(prompt);
+                hideLoadingIndicator();
+                modalBody.textContent = message;
+            } catch (error) {
+                hideLoadingIndicator();
+                modalBody.textContent = "Could not draft message. Please try again.";
+                console.error("Connection message error:", error);
+            }
+        });
+
+
+    </script>
+</body>
+</html>
